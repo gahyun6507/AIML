@@ -90,12 +90,12 @@ if uploaded_file is not None:
             st.write(f"- Precision: {precision_threshold:.2f}")
             st.write(f"- Recall: {recall_threshold:.2f}")
 
-            #정밀도 재현율 그래프
+            # 정밀도 재현율 그래프
             if st.checkbox("Show Precision-Recall vs Threshold Curve"):
-                precision, recall, threshold = precision_recall_curve(y_test, y_scores)
+                precision, recall, threshold_vals = precision_recall_curve(y_test, y_scores)
                 plt.figure(figsize=(10, 6))
-                plt.plot(threshold, precision[:-1], label="Precision", marker='.')
-                plt.plot(threshold, recall[:-1], label="Recall", marker='.')
+                plt.plot(threshold_vals, precision[:-1], label="Precision", marker='.')
+                plt.plot(threshold_vals, recall[:-1], label="Recall", marker='.')
                 plt.xlabel("Threshold");plt.ylabel("Precision / Recall")
                 plt.title("Precision and Recall vs Threshold")
                 plt.legend();plt.grid()
@@ -103,7 +103,7 @@ if uploaded_file is not None:
                 plt.xticks(np.arange(start, end, 0.1))
                 st.pyplot(plt)
 
-            if st.checkbox("Show AUC-ROC Curver"):
+            if st.checkbox("Show AUC-ROC Curve"):
                 fpr, tpr, thresholds = roc_curve(y_test, y_scores)
                 roc_auc = auc(fpr, tpr)
 
@@ -129,11 +129,9 @@ if uploaded_file is not None:
                         new_data.append(value)
 
                 if st.button("Predict"):
-                    prediction - (model.predict_proba([new_data])[:, 1] > threshold).astype(int)
+                    prediction = (model.predict_proba([new_data])[:, 1] > threshold).astype(int)
                     result = "Diabetic" if prediction[0] == 1 else "Non-Diabetic"
                     st.write(f"Prediction with threshold : {result}")
 
             else:
-                st.error("No features selected!")        
-
-                    
+                st.error("No features selected!") 
